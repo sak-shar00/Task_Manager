@@ -1,9 +1,11 @@
 const express = require("express");
-const { registerUser, loginUser } = require("../controllers/authController");
-
 const router = express.Router();
+const { registerUser, loginUser } = require("../controllers/authController");
+const { protect } = require("../middleware/auth");       // checks token
+const isAdmin = require("../middleware/isAdmin");     // NEW FILE (below)
 
-router.post("/register", registerUser); // Admin will use this to create users
-router.post("/login", loginUser);       // All roles use this
+// Only logged-in admin can register new users
+router.post("/register", protect, isAdmin, registerUser); 
+router.post("/login", loginUser);
 
 module.exports = router;

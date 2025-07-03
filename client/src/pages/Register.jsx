@@ -16,21 +16,38 @@ const Register = () => {
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await axios.post("http://localhost:5000/api/auth/register", formData);
-      alert("User registered successfully ✔");
-      navigate("/login");
-    } catch (err) {
-      const msg =
-        err.response?.data?.message || "Registration failed. Try again.";
-      alert(msg);
-    } finally {
-      setLoading(false);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  try {
+    // ✅ Get token from logged-in admin
+    const token = JSON.parse(localStorage.getItem("user"))?.token;
+
+    if (!token) {
+      alert("Unauthorized. Admin login required.");
+      return;
     }
-  };
+
+    // ✅ Pass token in Authorization header
+    await axios.post("http://localhost:5000/api/auth/register", formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log(formData);
+    alert("User registered successfully ✔");
+    navigate("/login");
+  } catch (err) {
+    const msg =
+      err.response?.data?.message || "Registration failed. Try again.";
+    alert(msg);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
