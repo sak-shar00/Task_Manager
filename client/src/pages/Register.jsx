@@ -53,14 +53,14 @@ const Register = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
         <h2 className="mb-6 text-center text-2xl font-semibold text-gray-800">
-          Create an Account
+          Register
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
             name="name"
-            placeholder="Full Name"
+            placeholder="Name"
             className="w-full rounded border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             value={formData.name}
             onChange={handleChange}
@@ -113,7 +113,7 @@ const Register = () => {
             className="cursor-pointer font-medium text-indigo-600 hover:underline"
             onClick={() => navigate("/login")}
           >
-            Log in
+            Login
           </span>
         </p>
       </div>

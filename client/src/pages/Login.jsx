@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../components/AuthContext";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,11 +17,7 @@ const Login = () => {
     setLoading(true);
     try {
       const res = await axios.post("http://localhost:5000/api/auth/login", formData);
-
-      // Store full user data (including token and role)
-      localStorage.setItem("user", JSON.stringify(res.data));
-
-      // Redirect to the respective dashboard based on role
+      login(res.data);
       navigate(`/${res.data.role}`);
     } catch (err) {
       alert(err.response?.data?.message || "Login failed!");

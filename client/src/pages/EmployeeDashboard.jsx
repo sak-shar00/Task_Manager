@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useAuth } from "../components/AuthContext";
 
 const EmployeeDashboard = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user } = useAuth();
   const token = user?.token;
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -18,10 +19,12 @@ const EmployeeDashboard = () => {
   const [showSubtaskForm, setShowSubtaskForm] = useState(false);
 
   useEffect(() => {
-    fetchTasks();
-    fetchEmployees();
-    fetchAssignedSubtasks();
-  }, []);
+    if (user?._id) {
+      fetchTasks();
+      fetchEmployees();
+      fetchAssignedSubtasks();
+    }
+  }, [user?._id]);
 
   const fetchTasks = async () => {
     const res = await axios.get(`http://localhost:5000/api/tasks/employee/${user._id}`, {
@@ -99,7 +102,7 @@ const EmployeeDashboard = () => {
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Welcome {user.name}</h1>
+        <h1 className="text-3xl font-bold text-indigo-700">Welcome {user?.name}</h1>
         <button
           onClick={() => setShowSubtaskForm((prev) => !prev)}
           className="bg-indigo-600 text-white px-6 py-2 rounded shadow hover:bg-indigo-700 transition-all text-lg font-semibold"

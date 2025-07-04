@@ -1,9 +1,10 @@
 // src/pages/AdminDashboard.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useAuth } from "../components/AuthContext";
 
 const AdminDashboard = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user } = useAuth();
   const [users, setUsers] = useState([]);
   const [specializations, setSpecializations] = useState({});
   const [viewRole, setViewRole] = useState("manager"); // or "employee"

@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { PlusIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../components/AuthContext";
 
 const ManagerDashboard = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user } = useAuth();
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
@@ -16,20 +17,18 @@ const ManagerDashboard = () => {
         console.error("Error fetching tasks:", err);
       }
     };
-    fetchTasks();
-  }, [user._id]);
+    if (user?._id) fetchTasks();
+  }, [user?._id]);
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {/* Header */}
       <header className="max-w-6xl mx-auto mb-6">
         <h1 className="text-3xl font-bold text-indigo-700">
-          Hello, {user.name}!
+          Hello, {user?.name}!
         </h1>
         <p className="text-gray-600 mt-1">Manage and assign tasks.</p>
       </header>
-
-     
 
       {/* TASKS DISPLAY */}
       <section className="max-w-6xl mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -48,15 +47,15 @@ const ManagerDashboard = () => {
     <p className="text-sm font-semibold text-red-600">Priority: {task.priority}</p>
   </Link>
 ))}
-
       </section>
-<div className='flex mt-5 justify-center'>     
-   <Link
-  to="/manager/analytics"
-  className="px-4 py-2 text-white bg-indigo-600 rounded hover:bg-indigo-700"
->
-  View Analytics
-</Link></div>
+      <div className='flex mt-5 justify-center'>
+        <Link
+          to="/manager/analytics"
+          className="px-4 py-2 text-white bg-indigo-600 rounded hover:bg-indigo-700"
+        >
+          View Analytics
+        </Link>
+      </div>
     </div>
   );
 };
